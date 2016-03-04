@@ -46,8 +46,23 @@ class UDPServer
 				
 			}
 			
+			else if(prevCommand.equals("send_aud"))
+			{
+				data = receivePacket.getData();
+
+				fo = new FileOutputStream("C:/Users/Goldwin/Desktop/received/" + "audio1.mp3");
+				fo.write(data);
+				fo.flush();
+				fo.close();
+				
+			}
+			
 			else 
+			{	
 				System.out.println("RECEIVED: " + sentence.toString().trim());
+				prevCommand = command[0];
+				fileName = command[1];
+			}
 			
 			InetAddress IPAddress = receivePacket.getAddress();                   
 			port = receivePacket.getPort();                   
@@ -57,8 +72,7 @@ class UDPServer
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 			serverSocket.send(sendPacket);              	
 			
-			prevCommand = command[0];
-			fileName = command[1];
+			
 		}       
 	} 
 }

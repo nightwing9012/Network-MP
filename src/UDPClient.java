@@ -64,7 +64,6 @@ class UDPClient
 				
 				if(command[0].equals("send_img")) // checks for the "send_pic" command
 				{
-					System.out.println("Command Accepted!");
 					f = new File("src/img/" + sourceFile);
 					fileType = Files.probeContentType(f.toPath());
 					checker = fileType.split("/");
@@ -83,7 +82,6 @@ class UDPClient
 				
 				else if(command[0].equals("send_vid")) // checks for the "send_vid" command 
 				{
-					System.out.println("Command Accepted!");
 					f = new File("src/vid/" + sourceFile);
 					fileType = Files.probeContentType(f.toPath());
 					checker = fileType.split("/");
@@ -103,7 +101,6 @@ class UDPClient
 				
 				else if(command[0].equals("send_aud")) // checks for the "send_aud" command
 				{
-					System.out.println("Command Accepted!");
 					f = new File("src/aud/" + sourceFile);
 					fileType = Files.probeContentType(f.toPath());
 					checker = fileType.split("/");
@@ -161,6 +158,7 @@ class UDPClient
 				System.out.println("Incorrect command!\n");
 			
 			clientSocket.close();
+			System.out.println("Transmission Terminated!\n");
 		}
 		
 	}
@@ -169,7 +167,7 @@ class UDPClient
 		sendData = sentence.getBytes();			
 		sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 1235);       
 		clientSocket.send(sendPacket);          
-		System.out.println("Execution successful!");
+		System.out.println("Command Accepted!");
 	}
 	
 	public static void sendImage() throws IOException{ // sends the image to the server
@@ -185,6 +183,7 @@ class UDPClient
 		buffer = baos.toByteArray();
 		packet = new DatagramPacket(buffer, buffer.length, IPAddress, 1235);
 		clientSocket.send(packet);
+		System.out.println("Transmission Started!");
 	}
 	
 	public static void sendVideo() throws IOException{ // sends the video to the server
@@ -193,15 +192,18 @@ class UDPClient
 	
 	public static void sendAudio() throws IOException, UnsupportedAudioFileException{ // sends the audio to the server 
 		ais = afReader.getAudioInputStream(f);
-		
+	
+		baos.flush();
+		buffer = baos.toByteArray();
 		packet = new DatagramPacket(buffer, buffer.length, IPAddress, 1235);
 		clientSocket.send(packet);
+		System.out.println("Transmission Started!");
 	}
 	
 	public static void getFeedback() throws IOException{ // gets feedback from the server
 		receivePacket = new DatagramPacket(receiveData, receiveData.length);
 		clientSocket.receive(receivePacket);       
 		modifiedSentence = new String(receivePacket.getData(),"UTF-8");    
-		System.out.println("FROM SERVER: " + modifiedSentence.toString().trim() + "\n");
+		System.out.println("FROM SERVER: " + modifiedSentence.toString().trim());
 	}
 }
